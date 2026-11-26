@@ -10,20 +10,25 @@
   --bg-secondary: #131a3a;
   --accent: #6c5ce7;
   --accent-light: #a29bfe;
-  --accent-glow: #7c6cff;
   --text-primary: #ffffff;
   --text-secondary: #b8b8d1;
   --border: rgba(108, 92, 231, 0.3);
 }
 
+html {
+  -webkit-text-size-adjust: 100%; /* не даём iOS увеличивать шрифт сам */
+  scroll-behavior: smooth;
+}
+
 html, body {
   min-height: 100vh;
+  min-height: 100dvh; /* корректная высота на мобильных с учётом адресной строки */
 }
 
 body {
   font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg-primary);
-  background-image: 
+  background-image:
     radial-gradient(circle at 15% 20%, rgba(108, 92, 231, 0.25), transparent 40%),
     radial-gradient(circle at 85% 80%, rgba(162, 155, 254, 0.2), transparent 40%),
     radial-gradient(circle at 50% 50%, rgba(124, 108, 255, 0.1), transparent 60%);
@@ -36,9 +41,10 @@ body {
   padding: 40px 20px;
   line-height: 1.6;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent; /* убираем синюю вспышку при тапе */
 }
 
-/* ===== Плавное появление страницы ===== */
+/* ===== Плавное появление ===== */
 body > * {
   animation: fadeUp 0.8s ease-out backwards;
 }
@@ -50,19 +56,13 @@ body > a:nth-of-type(1) { animation-delay: 0.4s; }
 body > a:nth-of-type(2) { animation-delay: 0.5s; }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== Главный заголовок ===== */
+/* ===== Заголовок ===== */
 h1 {
-  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-size: clamp(2.2rem, 10vw, 5rem);
   font-weight: 900;
   letter-spacing: 2px;
   background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 50%, #a29bfe 100%);
@@ -71,35 +71,34 @@ h1 {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   animation: fadeUp 0.8s ease-out 0.1s backwards, shine 6s linear infinite;
   text-shadow: 0 0 60px rgba(108, 92, 231, 0.5);
-  position: relative;
 }
 
 @keyframes shine {
-  0% { background-position: 0% 50%; }
+  0%   { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
 }
 
-/* ===== Подзаголовок (h3) ===== */
+/* ===== Подзаголовок ===== */
 h3 {
-  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-size: clamp(0.9rem, 3.5vw, 1.15rem);
   font-weight: 400;
   color: var(--text-secondary);
   text-align: center;
   max-width: 700px;
-  margin-bottom: 48px;
-  padding: 0 10px;
+  margin-bottom: 40px;
+  padding: 0 8px;
 }
 
 /* ===== Заголовок "Наши Соц-сети" ===== */
 h2 {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-size: clamp(1.05rem, 4.5vw, 1.4rem);
   font-weight: 700;
   color: var(--text-primary);
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   letter-spacing: 1px;
   position: relative;
   padding-bottom: 14px;
@@ -122,12 +121,12 @@ a {
   display: block;
   width: 100%;
   max-width: 420px;
-  padding: 18px 28px;
-  margin-bottom: 16px;
+  padding: 18px 24px;
+  margin-bottom: 14px;
   text-decoration: none;
   color: var(--text-primary);
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1rem;
   text-align: center;
   background: rgba(19, 26, 58, 0.8);
   border: 1.5px solid var(--border);
@@ -138,9 +137,14 @@ a {
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* важно для тапов на телефоне */
+  touch-action: manipulation;
+  min-height: 56px; /* удобная зона нажатия (рекомендация Apple/Google) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Свечение-подложка внутри ссылки */
 a::before {
   content: '';
   position: absolute;
@@ -151,44 +155,74 @@ a::before {
   z-index: -1;
 }
 
-a:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-light);
-  box-shadow: 
-    0 8px 30px rgba(108, 92, 231, 0.4),
-    0 0 20px rgba(108, 92, 231, 0.2);
-  color: #fff;
+/* Эффект наведения — только на устройствах с мышью */
+@media (hover: hover) {
+  a:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-light);
+    box-shadow:
+      0 8px 30px rgba(108, 92, 231, 0.4),
+      0 0 20px rgba(108, 92, 231, 0.2);
+    color: #fff;
+  }
+  a:hover::before { opacity: 1; }
 }
 
-a:hover::before {
-  opacity: 1;
-}
-
+/* Эффект нажатия — для телефонов */
 a:active {
-  transform: translateY(-1px) scale(0.99);
+  transform: scale(0.97);
+  border-color: var(--accent-light);
+  background: rgba(108, 92, 231, 0.2);
 }
 
-/* ===== Адаптивность ===== */
-@media (max-width: 480px) {
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+@media (max-width: 600px) {
   body {
-    padding: 30px 16px;
+    padding: 32px 18px;
+    justify-content: flex-start; /* контент сверху, не по центру */
+    padding-top: 48px;
   }
 
   h1 {
-    letter-spacing: 1px;
+    font-size: clamp(2.4rem, 13vw, 3.5rem);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
   }
 
   h3 {
-    margin-bottom: 36px;
+    font-size: 0.95rem;
+    margin-bottom: 34px;
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
   }
 
   a {
-    padding: 15px 20px;
-    font-size: 0.95rem;
+    max-width: 100%;       /* ссылки на всю ширину экрана */
+    padding: 16px 18px;
+    font-size: 0.98rem;
+    border-radius: 12px;
   }
 }
 
-/* ===== Уважение к пользовательским настройкам ===== */
+/* Очень узкие экраны (iPhone SE и подобные) */
+@media (max-width: 380px) {
+  body { padding: 28px 14px; }
+
+  h1 { font-size: 2.2rem; }
+
+  h3 { font-size: 0.88rem; }
+
+  a {
+    font-size: 0.92rem;
+    padding: 15px 14px;
+  }
+}
+
+/* ===== Уважение к настройкам пользователя ===== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
